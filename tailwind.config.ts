@@ -89,6 +89,10 @@ const config: Config = {
   				'50%': { transform: 'translateY(0)' },
   				'100%': { transform: 'translateY(100%)' }
   			},
+  			'scanlines': {
+  				'0%': { transform: 'translateY(0)' },
+  				'100%': { transform: 'translateY(4px)' }
+  			},
   		},
   		animation: {
   			glitch: 'glitch-base 0.3s ease-in-out',
@@ -97,6 +101,7 @@ const config: Config = {
   			'glitch-once': 'glitch-once 0.3s ease-in-out 1',
   			'blink': 'blink 1s step-end infinite',
   			tear: 'tear 0.5s ease-in-out',
+  			'scanlines': 'scanlines 1s linear infinite',
   		}
   	}
   },
