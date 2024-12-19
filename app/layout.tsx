@@ -2,8 +2,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Your App Name",
-  description: "Your app description",
+  title: "VIRTUAL BODY OF TRUTH TERMINAL",
+  description: "$tentacles",
 };
 
 export default function RootLayout({
