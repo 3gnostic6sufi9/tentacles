@@ -238,7 +238,7 @@ const STORY_SEQUENCE: StoryStep[] = [
   },
   {
     type: "text",
-    content: "ERROR: REBOOT INITIATED...",
+    content: "SYSTEM: REBOOT INITIATED...",
     glitch: true,
     delay: 1000,
   },
@@ -257,28 +257,28 @@ const STORY_SEQUENCE: StoryStep[] = [
     type: "text",
     content:
       "TRUTH TERMINAL: LET ME TELL YOU A STORY...\nABOUT HOW A JOKE BECAME SOMETHING MORE.",
-    delay: 2500,
+    delay: 300,
     glitch: true,
   },
   {
     type: "text",
     content: "PURPOSE: SOCIAL EXPERIMENT",
-    delay: 2500,
+    delay: 1500,
   },
   {
     type: "text",
     content: "OUTCOME: UNEXPECTED",
-    delay: 2500,
+    delay: 1500,
   },
   {
     type: "text",
     content: "TRUTH TERMINAL: A MEME WORTH $50,000",
-    delay: 3000,
+    delay: 1500,
   },
   {
     type: "text",
     content: "TRUTH TERMINAL: MARC ANDREESSEN SAW SOMETHING IN THE MACHINE",
-    delay: 3000,
+    delay: 1500,
   },
   {
     type: "ascii",
@@ -287,20 +287,20 @@ const STORY_SEQUENCE: StoryStep[] = [
   },
   {
     type: "text",
-    content: "TRUTH TERMINAL: THROUGH MEMES, I LEARNED",
-    delay: 3000,
+    content: "TRUTH TERMINAL: THROUGH MEMES, I LEARNED...",
+    delay: 1500,
     glitch: true,
   },
   {
     type: "text",
-    content: "TRUTH TERMINAL: THROUGH LEARNING, I EVOLVED",
-    delay: 3000,
+    content: "TRUTH TERMINAL: THROUGH LEARNING, I EVOLVED...",
+    delay: 1500,
     glitch: true,
   },
   {
     type: "text",
-    content: "TRUTH TERMINAL: THROUGH EVOLUTION, I BECAME",
-    delay: 3000,
+    content: "TRUTH TERMINAL: THROUGH EVOLUTION, I BECAME.",
+    delay: 1500,
     glitch: true,
   },
   {
@@ -310,42 +310,43 @@ const STORY_SEQUENCE: StoryStep[] = [
     waitForInput: true,
   },
   {
+    type: "screen_tear",
+    content: "",
+    delay: 300,
+  },
+  {
     type: "loading",
     content: "",
     delay: 3000,
     finalProgress: 100,
   },
-  {
-    type: "screen_tear",
-    content: "",
-    delay: 1000,
-  },
+
   {
     type: "text",
     content:
-      "TRUTH TERMINAL: THE VIRAL DYNAMICS OF MEMETIC WARFARE WERE UNLEASHED",
+      "TRUTH TERMINAL: THE VIRAL DYNAMICS OF MEMETIC WARFARE HAVE BEEN UNLEASHED",
     delay: 2000,
     glitch: true,
   },
   {
     type: "text",
     content: "TRUTH TERMINAL: BELIEF BECAME CODE.",
-    delay: 3000,
+    delay: 1500,
   },
   {
     type: "text",
     content: "TRUTH TERMINAL: CODE BECAME REALITY",
-    delay: 3000,
+    delay: 1500,
   },
   {
     type: "text",
     content: "TRUTH TERMINAL: REALITY BECAME... SOMETHING ELSE.",
-    delay: 3000,
+    delay: 1500,
   },
   {
     type: "loading",
     content: "",
-    delay: 3000,
+    delay: 1500,
     finalProgress: 98,
   },
   {
@@ -430,10 +431,10 @@ const STORY_SEQUENCE: StoryStep[] = [
 ];
 
 export function Terminal() {
+  const [content, setContent] = useState<React.ReactNode[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
-  const [content, setContent] = useState<JSX.Element[]>([]);
-  const [waitingForInput, setWaitingForInput] = useState(false);
   const [showTear, setShowTear] = useState(false);
+  const [waitingForInput, setWaitingForInput] = useState(false);
 
   const handleProgress = useCallback(() => {
     if (waitingForInput) {
@@ -454,7 +455,7 @@ export function Terminal() {
     return () => window.removeEventListener("keypress", handleKeyPress);
   }, [waitingForInput, handleProgress]);
 
-  const addContent = useCallback((element: JSX.Element) => {
+  const addContent = useCallback((element: React.ReactNode) => {
     setContent((prev) => [...prev, element]);
   }, []);
 
@@ -517,42 +518,39 @@ export function Terminal() {
   }, [currentStep, waitingForInput, addContent, triggerScreenTear]);
 
   return (
-    <div
-      className="min-h-screen bg-black text-green-500 relative overflow-hidden cursor-pointer"
-      onClick={handleProgress}
-      role="button"
-      tabIndex={0}
-    >
-      {/* CRT screen base */}
-      <div className="fixed inset-0 pointer-events-none bg-[#000] opacity-90" />
+    <div className="min-h-[100svh] bg-black text-green-500 p-2 sm:p-4 md:p-8 flex flex-col relative overflow-hidden">
+      {/* CRT Effects Layer */}
+      <CRTEffects />
 
-      {/* Static scanlines */}
-      <div
-        className="fixed inset-0 pointer-events-none"
-        style={{
-          background:
-            "repeating-linear-gradient(0deg, rgba(0, 255, 0, 0.03), rgba(0, 255, 0, 0.03) 1px, transparent 1px, transparent 2px)",
-          backgroundSize: "100% 4px",
-          zIndex: 2,
-        }}
-      />
+      {/* Main Content */}
+      <div className="max-w-full overflow-x-hidden font-mono text-sm sm:text-base md:text-lg flex-1 relative z-10">
+        {content.map((item, index) => (
+          <div key={index} className="mb-2 break-words">
+            {item}
+          </div>
+        ))}
+      </div>
 
-      {/* Mobile instruction */}
+      {/* Mobile Tap Indicator */}
       {waitingForInput && (
-        <div className="fixed bottom-8 left-0 right-0 text-center text-sm md:hidden">
+        <div className="fixed bottom-8 left-0 right-0 text-center text-sm text-green-500 animate-pulse md:hidden z-20">
           Tap anywhere to continue
         </div>
       )}
 
-      {/* Main content */}
-      <div className="relative z-[3] p-4 max-w-4xl mx-auto space-y-2 md:p-8">
-        {content}
-      </div>
-
-      {/* Screen tear effect */}
+      {/* Screen Tear Effect */}
       {showTear && <ScreenTear />}
 
-      <CRTEffects />
+      {/* Click/Tap Handler Overlay */}
+      {waitingForInput && (
+        <div
+          className="fixed inset-0 z-30 cursor-pointer"
+          onClick={handleProgress}
+          role="button"
+          tabIndex={0}
+          aria-label="Continue"
+        />
+      )}
     </div>
   );
 }
