@@ -564,7 +564,7 @@ export function Terminal() {
               <LinkButton href="https://x.com/tentaclesnsfw">
                 Twitter
               </LinkButton>
-              <LinkButton href="https://t.me/TentaclesCommunity">
+              <LinkButton href="https://t.me/tentaclesnsfw">
                 Telegram
               </LinkButton>
               <LinkButton href="https://dexscreener.com/solana/uinprWDcDX72ozV3NerExttg1zYDP3QkAAaYZRp7NHC">
