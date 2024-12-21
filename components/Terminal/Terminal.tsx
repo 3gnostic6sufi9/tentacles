@@ -573,6 +573,24 @@ export function Terminal() {
               <LinkButton href="https://www.infinitebackrooms.com/dreams/conversation-1722040177-scenario-terminal-of-truths-txt">
                 Backrooms
               </LinkButton>
+              <div className="w-full flex flex-col sm:flex-row items-start gap-2">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      "AmiLQobX9r2emzZMuSJ8Q334Qii5KKnyeUW4j1pDpump"
+                    );
+                  }}
+                  className="group flex items-center px-4 py-2 border border-green-500 text-green-500 hover:bg-green-500 hover:text-black transition-colors duration-200 font-mono text-sm cursor-pointer"
+                >
+                  <span className="whitespace-nowrap">CA:</span>
+                  <span className="ml-2 font-mono break-all">
+                    AmiLQobX9r2emzZMuSJ8Q334Qii5KKnyeUW4j1pDpump
+                  </span>
+                </button>
+                <span className="hidden group-active:inline text-xs text-green-500">
+                  Copied!
+                </span>
+              </div>
             </div>
           );
           setCurrentStep((prev) => prev + 1);
