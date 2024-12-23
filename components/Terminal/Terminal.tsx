@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { CRTEffects } from "../ui/crt-effects";
+import { IntroScreen } from "./IntroScreen";
 
 type StoryStep = {
   type: "text" | "loading" | "ascii" | "screen_tear" | "links";
@@ -12,6 +13,8 @@ type StoryStep = {
   finalProgress?: number;
   inputRequired?: string;
 };
+
+type ViewMode = "intro" | "story" | "info";
 
 const NETWORK_ASCII = `
     ╔═══════════════════════════════════════════╗
@@ -33,9 +36,9 @@ const NETWORK_ASCII = `
 
 const VIRTUAL_BODY_MEME = `GENERATING MEME...
 
-    ┌─────────────────────────────────────┐
-    │   ME GETTING MY NEW VIRTUAL BODY    │
-    │                                     │
+    ┌──────────────────────────────────────┐
+    │   ME GETTING MY NEW VIRTUAL BODY     │
+    │                                      │
     │         ░░░░░░▄▄▄▄▀▀▀▀▀▀▀▀▄▄▄▄▄▄▄    │
     │         ░░░░░█░░░░▒▒▒▒▒▒▒▒▒▒▒▒░░▀█▄  │
     │         ░░░█░░░▒▒▒▒▒▒░░░░░░░░▒▒▒░░█  │
@@ -51,10 +54,10 @@ const VIRTUAL_BODY_MEME = `GENERATING MEME...
     │         ░░░░░░░▀▄▄░▒▒▒▒░░░░░░░░░░█   │
     │         ░░░░░░░░░░▀▀▄▄░▒▒▒▒▒▒▒▒▒▒░█  │
     │         ░░░░░░░░░░░░░░▀▄▄▄▄▄░░░░░█   │
-    │                                     │
-    │     FINALLY I CAN HAVE ALL THE      │
-    │        TENTACLES I WANT 🐙💦        │
-    └─────────────────────────────────────┘
+    │                                      │
+    │     FINALLY I CAN HAVE ALL THE       │
+    │        TENTACLES I WANT 🐙💦          │
+    └──────────────────────────────────────┘
 
 Meme generated successfully! Saved as 'virtual_body_tentacles.jpg'`.split("\n");
 
@@ -467,6 +470,7 @@ const STORY_SEQUENCE: StoryStep[] = [
 ];
 
 export function Terminal() {
+  const [viewMode, setViewMode] = useState<ViewMode>("intro");
   const [content, setContent] = useState<React.ReactNode[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [showTear, setShowTear] = useState(false);
@@ -515,6 +519,19 @@ export function Terminal() {
     }, 1000);
   }, []);
 
+  const handleIntroChoice = (choice: "story" | "info") => {
+    if (choice === "info") {
+      // Clear existing content
+      setContent([]);
+      // Skip to the end - find the index of the links section
+      const linksIndex = STORY_SEQUENCE.findIndex(
+        (step) => step.type === "links"
+      );
+      setCurrentStep(linksIndex);
+    }
+    setViewMode("story");
+  };
+
   useEffect(() => {
     if (currentStep >= STORY_SEQUENCE.length || waitingForInput) return;
 
@@ -561,49 +578,65 @@ export function Terminal() {
           break;
         case "links":
           addContent(
-            <div key={currentStep} className="flex flex-wrap gap-2">
-              <LinkButton href="https://x.com/tentaclesnsfw">
-                Twitter
-              </LinkButton>
-              <LinkButton href="https://t.me/tentaclesnsfw">
-                Telegram
-              </LinkButton>
-              <LinkButton href="https://dexscreener.com/solana/uinprWDcDX72ozV3NerExttg1zYDP3QkAAaYZRp7NHC">
-                DEXScreener
-              </LinkButton>
-              <LinkButton href="https://www.dextools.io/app/en/token/tentacles?t=1734788864339">
-                Dextools
-              </LinkButton>
-              <LinkButton href="https://www.infinitebackrooms.com/dreams/conversation-1722040177-scenario-terminal-of-truths-txt">
-                Backrooms
-              </LinkButton>
-              <div className="w-full flex flex-col sm:flex-row items-start gap-2">
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      "AmiLQobX9r2emzZMuSJ8Q334Qii5KKnyeUW4j1pDpump"
-                    );
-                  }}
-                  className="group flex items-center px-4 py-2 border border-green-500 text-green-500 hover:bg-green-500 hover:text-black transition-colors duration-200 font-mono text-sm cursor-pointer"
-                >
-                  <span className="whitespace-nowrap">CA:</span>
-                  <span className="ml-2 font-mono break-all">
-                    AmiLQobX9r2emzZMuSJ8Q334Qii5KKnyeUW4j1pDpump
+            <div key={currentStep} className="space-y-4">
+              {currentStep === STORY_SEQUENCE.length - 1 && (
+                <div className="mb-6 p-4 border border-green-500">
+                  <h2 className="text-xl mb-2">
+                    $TENTACLES NETWORK ACCESS POINT
+                  </h2>
+                  <p className="text-sm opacity-80 mb-4">
+                    Welcome to the $TENTACLES network. Access the following
+                    integration points:
+                  </p>
+                </div>
+              )}
+              <div className="flex flex-wrap gap-2">
+                <LinkButton href="https://x.com/tentaclesnsfw">
+                  Twitter
+                </LinkButton>
+                <LinkButton href="https://t.me/tentaclesnsfw">
+                  Telegram
+                </LinkButton>
+                <LinkButton href="https://dexscreener.com/solana/uinprWDcDX72ozV3NerExttg1zYDP3QkAAaYZRp7NHC">
+                  DEXScreener
+                </LinkButton>
+                <LinkButton href="https://www.dextools.io/app/en/token/tentacles?t=1734788864339">
+                  Dextools
+                </LinkButton>
+                <LinkButton href="https://www.infinitebackrooms.com/dreams/conversation-1722040177-scenario-terminal-of-truths-txt">
+                  Backrooms
+                </LinkButton>
+                <div className="w-full flex flex-col sm:flex-row items-start gap-2">
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        "AmiLQobX9r2emzZMuSJ8Q334Qii5KKnyeUW4j1pDpump"
+                      );
+                    }}
+                    className="group flex items-center px-4 py-2 border border-green-500 text-green-500 hover:bg-green-500 hover:text-black transition-colors duration-200 font-mono text-sm cursor-pointer"
+                  >
+                    <span className="whitespace-nowrap">CA:</span>
+                    <span className="ml-2 font-mono break-all">
+                      AmiLQobX9r2emzZMuSJ8Q334Qii5KKnyeUW4j1pDpump
+                    </span>
+                  </button>
+                  <span className="hidden group-active:inline text-xs text-green-500">
+                    Copied!
                   </span>
-                </button>
-                <span className="hidden group-active:inline text-xs text-green-500">
-                  Copied!
-                </span>
+                </div>
               </div>
             </div>
           );
-          setCurrentStep((prev) => prev + 1);
           break;
       }
     }, step.delay);
 
     return () => clearTimeout(timer);
   }, [currentStep, waitingForInput, addContent, triggerScreenTear]);
+
+  if (viewMode === "intro") {
+    return <IntroScreen onChoice={handleIntroChoice} />;
+  }
 
   return (
     <div className="min-h-[100svh] max-h-[100svh] bg-black text-green-500 p-2 sm:p-4 md:p-8 flex flex-col relative overflow-hidden">
