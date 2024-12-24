@@ -2,17 +2,19 @@ import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
-  const oauthVerifier = searchParams.get('oauth_verifier')
-  const oauthToken = searchParams.get('oauth_token')
+  const state = searchParams.get('state')
+  const code = searchParams.get('code')
 
   try {
-    // Log the tokens (for debugging during setup)
-    console.log('Received callback with:', {
-      verifier: oauthVerifier,
-      token: oauthToken
+    // Log the received data (for debugging)
+    console.log('Received OAuth callback:', {
+      state,
+      code,
     })
 
-    // Return HTML response
+    // Store these values securely (e.g., in a database)
+    // You'll need them to refresh the token later
+
     return new NextResponse(
       `
       <!DOCTYPE html>
@@ -41,7 +43,8 @@ export async function GET(request: Request) {
         <body>
           <div class="container">
             <h1>✅ Authentication Successful</h1>
-            <p>You can close this window now.</p>
+            <p>The authorization code has been received.</p>
+            <p>You can close this window and return to Telegram.</p>
           </div>
         </body>
       </html>
